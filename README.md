@@ -29,3 +29,14 @@
 > 
 > content：
 > 1. 创建 `FFmpeg学习` 
+
+
+
+## `UPDATE`
+
+> date：
+> 2023/04/30
+> 
+> content：
+> 1. 更新 `FFmpeg学习` 
+> 2. 更新 `学问指路`
