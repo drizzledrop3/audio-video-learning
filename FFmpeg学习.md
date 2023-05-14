@@ -217,6 +217,34 @@ ffmpeg -i input.mp3 -c:a libvorbis output.ogg
 
 
 
+#### -vf
+
+在 FFmpeg 中，-vf（video filter）参数用于指定视频过滤器。通过使用-vf参数，可以将多个过滤器以逗号分隔的形式串联在一起。过滤器可以用于修改视频的帧率、大小、格式等属性，或者应用各种效果和滤镜来增强视频的质量。
+
+> 注:
+>
+> 在使用 FFmpeg 进行视频处理时，可以使用 `-filter_complex` 或 `-vf` 参数来指定视频过滤器。这两个参数的作用是一样的，都用于指定视频过滤器，写法不同。
+>
+> `-vf` 参数用于指定简单的线性滤镜链，适用于只有一种输入和输出的情况。例如，下面的命令将视频裁剪到宽度为 100 像素：
+>
+> ```
+> cssCopy code
+> ffmpeg -i input.mp4 -vf crop=100:in_h output.mp4
+> ```
+>
+> `-filter_complex` 参数用于指定复杂的过滤器图形，适用于多输入和多输出的情况。例如，下面的命令将两个视频拼接在一起：
+>
+> ```
+> lessCopy code
+> ffmpeg -i input1.mp4 -i input2.mp4 -filter_complex "[0:v] [0:a] [1:v] [1:a] concat=n=2:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" output.mp4
+> ```
+>
+> 虽然 `-vf` 和 `-filter_complex` 的作用是一样的，但是 `-vf` 的使用比较简单，适用于只有一种输入和输出的情况，而 `-filter_complex` 则适用于多输入和多输出的情况。
+
+
+
+
+
 #### -ac
 
 在FFmpeg中，"-ac"参数用于**设置输出音频流的声道数的参数**，该参数是一个**可选参数**。它可以指定输出文件的声道数，从而使FFmpeg将输入音频流从一种声道数转换为另一种声道数。
@@ -273,6 +301,16 @@ ffmpeg -i input.mp4 -filter_complex "[0:v]scale=640x360,transpose=1[v];[0:a]volu
 
 
 
+#### -q:a
+
+在FFmpeg中，`-q:a`参数用于指定音频的质量，取值范围为0到9，其中0为最高质量，9为最低质量。这个参数只在一些编码器（如libmp3lame、libopus、libvorbis）下起作用。
+
+具体地说，这个参数会影响编码器的比特率控制。通常情况下，比特率越高，音频质量越好，但文件大小也越大。如果使用`-q:a`参数，编码器将会根据所指定的质量级别自动选择合适的比特率来进行编码，从而在一定程度上平衡音频质量和文件大小。
+
+需要注意的是，不同编码器对`-q:a`参数的解释可能会有所不同，因此在使用时应该查看具体编码器的文档或者测试不同参数值所得到的音频质量和文件大小，以便选择最适合的参数。
+
+
+
 
 
 #### -preset
@@ -302,6 +340,13 @@ ffmpeg -i input.mp4 -c:v libx264 -preset fast -b:v 1M -c:a copy output.mp4
 在这个命令中，"-i"参数用于指定输入文件"input.mp4"，**"-c:v"参数用于指定视频编码器为"libx264"，"-preset"参数用于指定编码速度和质量之间的平衡参数为"fast"，"-b:v"参数用于指定视频流的码率为1M，"-c:a"参数用于直接拷贝音频流**。最后，输出文件保存为"output.mp4"。
 
 需要注意的是，"-preset"参数只是影响编码速度和质量之间的平衡关系，具体的编码效果还需要根据其他参数进行调整和优化。在实际使用中，需要结合具体的应用场景和需求来选择合适的"-preset"参数和其他编码参数。
+
+> `-preset ultrafast` 和 `-preset placebo` 是在使用 FFmpeg 进行视频编码时的预设参数。这些预设参数用于控制编码速度和压缩效率之间的权衡。
+>
+> 1. `-preset ultrafast`: 这是一个编码速度优先的预设参数。使用此预设参数可以快速完成编码过程，但可能会导致视频质量较低和较大的文件大小。适用于需要快速编码的场景，如实时流传输或测试目的。
+> 2. `-preset placebo`: 这是一个编码质量优先的预设参数。使用此预设参数可以获得最高质量的视频输出，但编码速度非常慢，需要更长的时间来完成编码。适用于对视频质量要求极高的场景，如专业视频制作或存档目的。
+>
+> 这些预设参数是 FFmpeg 中提供的一组预定义选项，可以根据具体需求选择合适的预设参数。除了 ultrafast 和 placebo 外，还有其他预设参数可供选择，例如 veryfast、fast、slow 等，用于在编码速度和质量之间进行平衡。
 
 
 
@@ -439,6 +484,39 @@ ffmpeg -i input.mp4 -to 00:01:30 output.mp4
 
 
 
+#### -tune
+
+`-tune` 是FFmpeg中的一个选项，用于指定编码器的预设参数。它可以根据不同的应用场景和需求选择合适的预设参数，以优化编码质量、速度或特定的编码特性。
+
+使用 `-tune` 选项可以提供以下预设参数：
+
+1. `film`: 适用于电影内容的编码，注重编码质量。
+2. `animation`: 适用于动画内容的编码，注重提供更好的动画压缩效果。
+3. `grain`: 适用于具有颗粒状噪声的内容的编码，可以保留细节和噪声。
+4. `stillimage`: 适用于静态图像内容的编码，注重保留图像细节。
+5. `fastdecode`: 适用于快速解码的编码，可以加快解码速度。
+6. `zerolatency`: 适用于实时传输场景的编码，尽量减小编码延迟。
+7. `psnr`: 优化编码器以最大程度地提高峰值信噪比（PSNR）。
+
+每个预设参数都针对特定的编码目标进行了优化，具体的效果和表现取决于输入内容、编码器以及其他相关参数的设置。
+
+使用 `-tune` 选项时，可以根据实际需求选择合适的预设参数，以获得所需的编码效果。
+
+> eg.：
+>
+> `-tune zerolatency` 是FFmpeg中的一个选项，用于优化编码设置以实现零延迟的实时传输。该选项适用于实时流媒体应用，例如视频会议、直播和实时监控等场景。
+>
+> 使用 `-tune zerolatency` 可以在一定程度上减少编码延迟，提高传输的实时性。它会对编码参数进行调整，以减小编码缓冲区的大小和延迟。具体来说，它可能会采取以下一些策略：
+>
+> 1. 减小GOP (Group of Pictures) 大小：GOP是一组连续的视频帧，减小GOP大小可以减小编码延迟，但也可能导致压缩效率和视频质量的降低。
+> 2. 降低B帧的使用：B帧是一种参考两个关键帧之间的帧，减少B帧的使用可以减小编码延迟。
+> 3. 使用较小的量化参数：量化参数的增加可以降低编码延迟，但也可能导致视频质量的降低。
+> 4. 禁用某些编码优化：某些编码优化可能会引入额外的延迟，禁用这些优化可以减小编码延迟。
+>
+> 值得注意的是，使用 `-tune zerolatency` 可以降低编码延迟，但并不能完全实现零延迟，实际的延迟取决于多个因素，包括编码器设置、视频帧率、分辨率和编码质量等。
+>
+> 因此，在实时传输场景中，如果需要更低的编码延迟，可以尝试使用 `-tune zerolatency` 选项，并根据实际需求进行进一步调整和优化。
+
 
 
 ### 常用命令
@@ -452,4 +530,152 @@ ffmpeg -i input.jpg -vf hflip output.jpg
 其中，`-i input.jpg` 指定输入图片文件路径为 `input.jpg`，`-vf hflip` 指定进行水平镜像操作，`output.jpg` 指定输出图片文件路径为 `output.jpg`。
 
 如果需要进行垂直镜像操作，可以将 `-vf hflip` 替换为 `-vf vflip`。
+
+
+
+
+
+#### 帧效果查看
+
+```cmd
+FFmpegStudy>ffplay -flags2 +export_mvs "[UHA-WINGS][Koi wa Ameagari no You ni][01][x264 1080p][GB].mp4" -vf codecview=mv=pf+bf+bb
+```
+
+使用 FFplay 工具来播放指定的 MP4 视频文件，并添加了 codecview 滤镜，通过设置 mv 参数可以显示每个宏块的运动矢量信息。
+
+具体含义如下：
+
+- `ffplay`：使用 FFplay 工具来播放视频
+- `-flags2 +export_mvs`：启用 export_mvs 标志，允许输出每个宏块的运动矢量信息
+- `"[UHA-WINGS][Koi wa Ameagari no You ni][01][x264 1080p][GB].mp4"`：指定要播放的 MP4 视频文件路径
+- `-vf codecview=mv=pf`：添加 codecview 滤镜，并设置参数 mv=pf，以显示每个宏块的运动矢量信息。其中，mv 表示要显示运动矢量信息
+- `pf`：在运动矢量图像上显示帧间预测（P帧）的矢量。
+- `bf`：在运动矢量图像上显示前向预测帧（B帧）的矢量。
+- `bb`：在运动矢量图像上显示双向预测帧（B帧）的矢量。
+
+
+
+
+
+#### 切片（segment）
+
+```cmd
+ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -segment_time 60 -segment_list_type m3u8 -segment_list output.m3u8 test_output-%d.mp4
+```
+
+该命令的功能是将输入的input.mp4文件**按照时长分割成若干个输出文件**test_output-1.mp4、test_output-2.mp4、test_output-3.mp4等，每个输出文件的时长是由-segment_time参数指定的，该参数的默认值为2秒。同时，由于-c copy参数的存在，输出文件的编码格式与输入文件相同，即不做重新编码处理，其次，-segment_format参数指定输出文件的格式为mp4。最后，-segment_list_type m3u8 -segment_list 生成指定的m3u8文件。
+
+参数具体解释：
+
+> - -re：以实时模式读取输入文件
+> - -i input.mp4：输入文件为input.mp4
+> - -c copy：进行复制编码，不对音视频进行重新编码，保留原有的编码格式和参数
+> - -f segment：将输入流分割成多个输出段，每个输出段的时长由-segment_time参数决定
+> - -segment_format mp4：指定输出段的格式为mp4格式
+> - -segment_list_type m3u8：指定生成切片列表文档，文档格式为m3u8
+> - segment_list output.m3u8：指定生成文档名为 output.m3u8（当然也可以指定为其他格式，诸如csv，flat等）
+> - test_output-%d.mp4：输出文件的文件名格式，其中%d表示输出文件的序号，从1开始递增，每个输出段的时长由-segment_time参数决定。
+
+
+
+注：使用-segment_time指定每60s进行一次切片时，并不能保证每个切片的时长都完全是60秒，因为ffmpeg默认在关键帧处进行切片，如果60秒的时长内没有关键帧，那么就会一直等到出现关键帧后再进行切片，所以可能会出现某些切片时长略短或略长的情况。这在对有长时间相同场景的音视频进行默认为2秒切片时，会特别明显，有些段会10多秒甚至更多，也有就1秒的。
+
+
+
+#### 切片（-ss -t）
+
+```cmd
+ffmpeg -i "[UHA-WINGS][Koi wa Ameagari no You ni][01][x264 1080p][GB].mp4" -ss 5 -c copy -t 10 output_sst.mp4
+```
+
+将输入文件 "[UHA-WINGS] [Koi wa Ameagari no You ni] [01] [x264 1080p] [GB].mp4" 从第 5 秒的位置开始，复制 10 秒的内容，保存到输出文件 "output_sst.mp4" 中。
+
+以下是每个参数的解释：
+
+- `-i`：指定输入文件名。
+- `"[UHA-WINGS][Koi wa Ameagari no You ni][01][x264 1080p][GB].mp4"`：输入文件名。
+- `-ss 5`：从第 5 秒的位置开始。
+- `-c copy`：使用“copy”编解码器，将输入文件中的音视频数据直接复制到输出文件中，以保持编码格式不变。
+- `-t 10`：设置输出文件的持续时间为 10 秒。
+- `output_sst.mp4`：输出文件名。
+
+
+
+
+
+#### 音视频拆分
+
+```cmd
+ffmpeg -i "[UHA-WINGS][Koi wa Ameagari no You ni][01][x264 1080p][GB].mp4" -c:a copy -vn outputAudio.aac
+```
+
+将输入文件 "[UHA-WINGS] [Koi wa Ameagari no You ni] [01] [x264 1080p] [GB].mp4" 中的音频流提取出来，再将提取出来的音频流复制到输出文件 outputAudio.aac 中，而视频流则被丢弃。
+
+具体的参数含义如下：
+
+- `-i`：指定输入文件名；
+- `-c:a`：指定要对音频流进行操作，这里表示对音频进行编码/解码（缺失参数）；
+- `copy`：表示使用与输入流相同的编码格式，不进行编码，直接将输入流复制到输出文件；
+- `-vn`：表示禁用视频流，不进行视频流的处理；
+- `outputAudio.aac`：指定输出文件名为 outputAudio.aac。
+
+因此，该命令的作用是提取输入文件中的音频流，直接将其复制到输出文件中，输出文件的格式为 AAC，视频流将被忽略。
+
+
+
+```cmd
+ffmpeg -i "[UHA-WINGS][Koi wa Ameagari no You ni][01][x264 1080p][GB].mp4" -c:v copy -an outputVideo.mp4
+```
+
+将输入文件 "[UHA-WINGS] [Koi wa Ameagari no You ni] [01] [x264 1080p] [GB].mp4" 中的视频流提取出来，再将提取出来的视频流复制到输出文件 outputVideo.mp4 中，而音频流则被丢弃。
+
+具体的参数含义如下：
+
+- `-i`：指定输入文件名；
+- `-c:v`：指定要对音频流进行操作，这里表示对视频进行编码/解码（缺失参数）；
+- `copy`：表示使用与输入流相同的编码格式，不进行编码，直接将输入流复制到输出文件；
+- `-an`：表示禁用音频流，不进行音频的处理；
+- `outputVideo.mp4`：指定输出文件名为 outputVideo.mp4。
+
+因此，该命令的作用是提取输入文件中的视频流，直接将其复制到输出文件中，输出文件的格式为mp4，音频流将被忽略。
+
+
+
+
+
+#### 抽帧
+
+```cmd
+ffmpeg -i input.mp4 -vf fps=10 out%d.jpg
+```
+
+该命令使用FFmpeg工具，将输入文件 input.mp4 的视频流以每秒10帧的速率抽取帧，并将抽取的每一帧保存为输出文件 out%d.jpg（%d 会被自动替换为数字序列）。
+
+具体参数的作用如下：
+
+- -i：指定输入文件名。
+- -vf：指定视频滤镜，这里使用 fps=10 指定抽取帧的速率为**10帧/秒**。
+- out%d.jpg：指定输出文件名，其中 %d 表示数字序列，会按照顺序递增，例如 out1.jpg、out2.jpg 等。
+
+
+
+#### 音频编码质量
+
+##### mp3
+
+```cmd
+ffmpeg -i outAnimal.mp3 -c:a libmp3lame -q:a 0 outAnimalMax.mp3
+```
+
+将输入音频文件 outAnimal.mp3 进行重新编码，转换为 MP3 格式的音频文件 outAnimalMax.mp3，同时对转码后的音频使用最高品质（音频质量系数为 0）进行编码。
+
+各参数的意义如下：
+
+- `-i outAnimal.mp3`：指定输入文件为 outAnimal.mp3。
+- `-c:a libmp3lame`：设置音频编码器为 libmp3lame，即使用 LAME MP3 编码器对音频进行编码。
+- `-q:a 0`：设置音频质量系数为 0，即使用最高音质对音频进行编码，生成的 MP3 文件质量最高。如果该参数设置为 2，则音频质量会有所降低，但生成的文件大小会更小。
+
+
+
+
 
