@@ -380,6 +380,38 @@ ffmpeg -i input.mp4 -c:s copy output.mp4
 
 
 
+#### -acodec copy
+
+1. `-acodec copy`用于复制音频流，即将源文件中的音频流直接复制到输出文件中，不进行任何编码或转码操作。
+
+2. 这个选项只适用于音频流，而不会对视频流进行任何处理。
+
+   示例：
+
+   ```cmd
+   ffmpeg -i input.mp4 -acodec copy -vcodec <video_codec> output.mp4
+   ```
+
+
+
+
+
+#### -vcodec copy
+
+1. `-vcodec copy`用于复制视频流，即将源文件中的视频流直接复制到输出文件中，不进行任何编码或转码操作。
+
+2. 这个选项只适用于视频流，而不会对音频流进行任何处理。
+
+   示例：
+
+   ```cmd
+   ffmpeg -i input.mp4 -vcodec copy -acodec <audio_codec> output.mp4
+   ```
+
+   
+
+
+
 #### -ss
 
 在FFmpeg中，"-ss"  参数表示**跳过输入文件的指定时间，从指定时间开始进行处理**。具体来说，它用于指定从哪个时间点开始剪辑或处理视频，其后面跟着一个时间戳参数，格式为"hh:mm:ss"或"ss"。
@@ -405,6 +437,30 @@ ffmpeg -i input.mp4 -ss 00:01:30 -c copy output.mp4
 > 因此，为了确保剪辑的准确性和处理效率，建议将 "-ss" 参数放在 "-i" 参数之前，这样 FFmpeg 就可以在读取输入文件时根据指定时间戳进行处理，避免了上述问题。
 
 
+
+#### -vframe
+
+在 FFmpeg 中，参数 `-vframes` 用于指定从视频中提取的帧数。它允许你设置提取的帧数的数量。
+
+在之前的示例命令中，我们使用了 `-vframes 1` 来只提取一帧。这意味着从视频中仅提取一帧，并将其保存为输出文件。
+
+如果你想提取多帧，只需将 `-vframes` 后面的数字更改为你想要的帧数。例如，要提取五帧，你可以使用 `-vframes 5`。这样会从视频中提取五帧，并将它们保存为输出文件的图片序列。
+
+以下是使用FFmpeg命令行工具从视频中提取一帧并转换为BMP格式的示例命令：
+
+```bash
+ffmpeg -i input_video.mp4 -ss 00:00:05 -vframes 1 -f image2 output_frame.bmp
+```
+
+解释：
+
+- `-i input_video.mp4`：指定输入视频文件。
+- `-ss 00:00:05`：指定从视频中提取帧的时间点，此处为5秒，可以根据需要调整。
+- `-vframes 1`：指定只提取一帧。
+- `-f image2`：指定输出格式为图片序列，这里设置为BMP格式。
+- `output_frame.bmp`：指定输出帧的文件名。
+
+执行该命令后，FFmpeg将从输入视频中提取一帧，并将其保存为output_frame.bmp文件。请确保在使用之前已经安装了FFmpeg并且其在系统的环境变量中可用。
 
 
 
