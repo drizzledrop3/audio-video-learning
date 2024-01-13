@@ -732,6 +732,32 @@ ffmpeg -i outAnimal.mp3 -c:a libmp3lame -q:a 0 outAnimalMax.mp3
 - `-q:a 0`：设置音频质量系数为 0，即使用最高音质对音频进行编码，生成的 MP3 文件质量最高。如果该参数设置为 2，则音频质量会有所降低，但生成的文件大小会更小。
 
 
+## 音视频编解码
 
+### 音视频解码
+
+#### ffmpeg音视频解码流程参考
+
+![](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/ffmpeg1.png)
+
+
+
+#### ffmpeg音视频播放流程参考(windows)
+
+![](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/ffmpeg2.png)
+
+
+
+### 音视频编码
+
+#### ffmpeg视频编码YUV参考
+
+![](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/ffmpeg3.png)
+
+
+
+#### ffmpeg音频编码PCM参考
+
+![](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/ffmpeg4.png)
 
 
