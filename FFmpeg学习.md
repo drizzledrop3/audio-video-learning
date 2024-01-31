@@ -761,3 +761,237 @@ ffmpeg -i outAnimal.mp3 -c:a libmp3lame -q:a 0 outAnimalMax.mp3
 ![](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/ffmpeg4.png)
 
 
+
+
+## FFmpeg开发库
+
+### 简介
+
+FFmpeg用于处理多媒体数据的开源软件项目，提供了多个库，其中的八个主要开发库如下：
+
+1. **avcodec（编解码）**：
+   - **作用**：提供了音视频编解码的功能，是 FFmpeg 中最重要的库之一。它包含了许多编码器和解码器，用于将音频和视频数据从一种格式转换为另一种格式。
+2. **avformat（封装格式处理）**：
+   - **作用**：处理多媒体封装格式，例如AVI、MP4、MKV等。它能够读取和写入这些封装格式，对媒体文件进行解封装和封装，提供了统一的接口。
+3. **avfilter（滤镜特效处理）**：
+   - **作用**：提供了音视频滤镜处理的功能，可以应用各种滤镜和特效，如裁剪、调整色彩、添加水印等。它允许在媒体流上构建处理链，实现复杂的处理流程。
+4. **avdevice（各种设备的输入输出）**：
+   - **作用**：用于处理各种设备的输入和输出，例如摄像头、麦克风等。它提供了一个通用的设备接口，使得 FFmpeg 能够与各种硬件设备进行交互。
+5. **avutil（工具库）**：
+   - **作用**：是 FFmpeg 中的工具库，包含了一些通用的工具函数和数据结构。其他库通常会依赖于 avutil 提供的基本功能，因此它是整个 FFmpeg 的基础。
+6. **postproc（后加工）**：
+   - **作用**：提供了一些图像后处理的功能，例如去块效应滤波、运动补偿等。它主要用于视频编码时对图像进行一些优化处理。但在现代 FFmpeg 中已不建议使用，因为大多数功能已经被 avfilter 取代。
+7. **swresample（音频采样数据格式转换）**：
+   - **作用**：用于进行音频采样数据的格式转换。它可以将音频数据从一种采样格式转换为另一种，例如从浮点数表示到整数表示，或者改变采样率。
+8. **swscale（视频像素数据格式转换）**：
+   - **作用**：用于进行视频像素数据的格式转换。它可以将视频帧的像素格式、尺寸等进行转换，以适应不同的需求，例如在不同的显示设备上播放视频。
+
+
+
+### 应用举例
+
+当使用 FFmpeg 的各个库进行实际开发时，可以涉及到以下一些使用例子：
+
+1. **avcodec（编解码）**：
+   - **例子**：将一个视频文件从一种编码格式（如 H.264）解码为另一种编码格式（如 H.265）。
+   - **实际应用**：视频编辑软件、实时流媒体处理。
+
+```c
+AVFormatContext *inputFormatContext, *outputFormatContext;
+AVCodecContext *decoderContext, *encoderContext;
+AVPacket packet;
+AVFrame *frame;
+
+// 初始化和打开输入、输出格式上下文、编解码器等...
+
+while (av_read_frame(inputFormatContext, &packet) >= 0) {
+    // 解码视频帧
+    avcodec_receive_frame(decoderContext, frame);
+    
+    // 对帧进行处理或修改
+    
+    // 编码并写入输出文件
+    avcodec_send_frame(encoderContext, frame);
+    av_write_frame(outputFormatContext, &packet);
+}
+
+// 清理资源...
+```
+
+在此示例中，展示avcodec用于视频帧解码、处理、编码，并将结果写入输出文件的基本框架。
+
+
+
+2. **avformat（封装格式处理）**：
+   - **例子**：将多个视频文件合并成一个。
+   - **实际应用**：视频编辑、批量处理。
+
+```c
+AVFormatContext *inputFormatContext1, *inputFormatContext2, *outputFormatContext;
+AVPacket packet;
+
+// 初始化和打开输入、输出格式上下文等...
+
+while (av_read_frame(inputFormatContext1, &packet) >= 0) {
+    // 将第一个文件的帧写入输出文件
+    av_write_frame(outputFormatContext, &packet);
+}
+
+while (av_read_frame(inputFormatContext2, &packet) >= 0) {
+    // 将第二个文件的帧写入输出文件
+    av_write_frame(outputFormatContext, &packet);
+}
+
+// 清理资源...
+```
+
+ 在此示例中，展示avformat用于将两个输入文件的帧写入同一个输出文件的基本框架。
+
+
+
+3. **avfilter（滤镜特效处理）**：
+   - **例子**：为视频添加水印。
+   - **实际应用**：视频编辑、广告插入。
+
+```c
+AVFilterGraph *filterGraph;
+AVFilterContext *inputFilterContext, *outputFilterContext;
+AVFrame *frame;
+
+// 初始化和配置滤镜图...
+
+while (av_read_frame(inputFormatContext, &packet) >= 0) {
+    // 解码视频帧
+    avcodec_receive_frame(decoderContext, frame);
+    
+    // 应用滤镜效果
+    av_buffersrc_add_frame(inputFilterContext, frame);
+    av_buffersink_get_frame(outputFilterContext, frame);
+    
+    // 编码并写入输出文件
+    avcodec_send_frame(encoderContext, frame);
+    av_write_frame(outputFormatContext, &packet);
+}
+
+// 清理资源...
+```
+
+在此示例中，展示avfilter用于视频滤镜处理的基本框架。
+
+
+
+4. **avdevice（各种设备的输入输出）**：
+
+   - **例子**：从摄像头捕获视频。
+
+   - **实际应用**：实时视频采集、视频监控系统。
+
+   ```c
+   AVFormatContext *inputFormatContext;
+   AVPacket packet;
+   
+   // 初始化和打开摄像头设备...
+   
+   while (av_read_frame(inputFormatContext, &packet) >= 0) {
+       // 处理视频帧...
+   }
+   
+   // 清理资源...
+   ```
+
+   在此示例中，avdevice用于从摄像头设备读取视频帧的基本框架。
+
+   
+
+5. **avutil（工具库）**：
+
+   - **示例：** 获取多媒体文件的持续时间。
+   - **实际应用：** 多媒体播放器，媒体信息工具。
+
+   ```c
+   codeAVFormatContext *formatContext;
+   avformat_open_input(&formatContext, "input_file.mp4", NULL, NULL);
+   avformat_find_stream_info(formatContext, NULL);
+   
+   int durationInSeconds = formatContext->duration / AV_TIME_BASE;
+   printf("持续时间：%d 秒\n", durationInSeconds);
+   
+   // 清理资源...
+   ```
+
+   在此示例中，avutil 用于获取多媒体文件的持续时间的基本框架。
+
+   
+
+6. **postproc（后加工）**：
+
+   - **示例：** 对视频帧应用后处理滤镜。
+   - **实际应用：** 视频编辑，多媒体应用中的特效。
+
+   ```c
+   codeAVCodecContext *codecContext;
+   AVFrame *inputFrame, *outputFrame;
+   
+   // 初始化编解码器和帧...
+   
+   // 将视频帧解码为 inputFrame
+   
+   // 应用后处理
+   av_postproc_execute(codecContext->postproc, inputFrame->data, inputFrame->linesize, outputFrame->data, outputFrame->linesize, codecContext->width, codecContext->height);
+   
+   // 处理或显示输出帧
+   
+   // 清理资源...
+   ```
+
+   此示例演示了将后处理滤镜应用于视频帧的基本框架。
+
+   
+
+7. **swresample（音频采样数据格式转换）**：
+
+   - **示例：** 将音频从一种采样率转换为另一种。
+   - **实际应用：** 音频处理，与不同音频设备的兼容性。
+
+   ```c
+   codeSwrContext *swrContext;
+   uint8_t **inputAudioData, **outputAudioData;
+   
+   // 初始化 swrContext 并分配 inputAudioData、outputAudioData...
+   
+   // 读取输入音频数据...
+   
+   // 重新采样音频
+   swr_convert(swrContext, outputAudioData, outputFrameSize, (const uint8_t **)inputAudioData, inputFrameSize);
+   
+   // 处理或播放重新采样的音频
+   
+   // 清理资源...
+   ```
+
+   在此示例中，swresample 用于将音频数据从一种采样率转换为另一种的基本框架。
+
+   
+
+8. **swscale（视频像素数据格式转换）**：
+
+- **示例：** 调整视频帧的分辨率。
+- **实际应用：** 视频播放，视频编辑。
+
+```c
+codeSwsContext *swsContext;
+AVFrame *inputFrame, *outputFrame;
+
+// 初始化 swsContext 并分配 inputFrame、outputFrame...
+
+// 将视频帧解码为 inputFrame
+
+// 调整视频帧的分辨率
+sws_scale(swsContext, inputFrame->data, inputFrame->linesize, 0, codecContext->height, outputFrame->data, outputFrame->linesize);
+
+// 处理或显示缩放后的输出帧
+
+// 清理资源...
+```
+
+在此示例中，swscale 用于调整视频帧的分辨率的基本框架。
