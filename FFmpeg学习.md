@@ -995,3 +995,1069 @@ sws_scale(swsContext, inputFrame->data, inputFrame->linesize, 0, codecContext->h
 ```
 
 在此示例中，swscale 用于调整视频帧的分辨率的基本框架。
+
+
+
+### 结构体
+[](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/FFmpegStruct.png)
+
+
+
+
+## SDL开发库
+
+### 简介
+
+
+
+### 开发流程举例
+[](https://github.com/drizzledrop3/audio-video-learning/blob/main/IMG/AudioVideo/SDL%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+以`SDL播放YUV测试`为例，说明以上函数：
+
+1. `SDL_Init(SDL_INIT_VIDEO)`: 初始化SDL系统。此函数用于初始化SDL库，参数 `SDL_INIT_VIDEO` 表示初始化视频子系统。
+
+2. `SDL_CreateWindow("Simplest Video Play SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)`: 创建窗口SDL_Window。该函数用于创建一个窗口，参数包括窗口标题、位置和大小，以及窗口的属性。
+
+3. `SDL_CreateRenderer(screen, -1, 0)`: 创建渲染器SDL_Renderer。该函数用于创建一个渲染器，将渲染器与特定的窗口关联，参数包括要绑定的窗口和渲染器的索引。
+
+4. `SDL_CreateTexture(sdlRenderer, pixformat, SDL_TEXTUREACCESS_STREAMING, pixel_w, pixel_h)`: 创建纹理SDL_Texture。该函数用于创建一个纹理，纹理是一个用于存储图像数据的对象，参数包括要绑定的渲染器、像素格式、访问方式以及纹理的宽度和高度。
+
+5. `SDL_UpdateTexture(sdlTexture, NULL, buffer, pixel_w)`: 设置纹理的数据。该函数用于更新纹理的图像数据，参数包括要更新的纹理、更新的区域（NULL表示整个纹理）、图像数据的来源缓冲区以及图像数据的宽度。
+
+6. `SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &sdlRect)`: 将纹理的数据拷贝给渲染器。该函数用于将纹理的图像数据渲染到指定的渲染器上，参数包括源纹理、源区域（NULL表示整个纹理）、目标区域（即屏幕上的位置和大小）。
+
+7. `SDL_RenderPresent(sdlRenderer)`: 显示。该函数用于将渲染器上的所有绘制操作呈现到屏幕上，使得用户可以看到绘制的图像。
+
+8. `SDL_Delay(40)`: 工具函数，用于延时。该函数用于暂停程序的执行一段时间，参数表示要延时的毫秒数。
+
+9. `SDL_Quit()`: 退出SDL系统。该函数用于释放SDL库所占用的资源，并退出SDL系统，程序执行到此结束。
+
+这些函数组合在一起实现了一个简单的视频播放器，能够打开窗口并播放YUV格式的视频文件。
+
+
+
+> **注**
+>
+> - 纹理
+>
+>   在SDL中，纹理（Texture）是用于在屏幕上渲染图像的对象。SDL提供了一套用于创建、加载、操作和渲染纹理的函数，使得开发者可以方便地在应用程序中展示图像、动画和其他视觉元素。
+>
+>   SDL中的纹理主要通过以下几个函数来创建和操作：
+>
+>   1. **SDL_CreateTexture()**: 用于创建一个新的纹理对象。开发者可以指定纹理的宽度、高度、像素格式等属性，并将图像数据加载到纹理中。
+>   2. **SDL_UpdateTexture()**: 用于更新纹理的像素数据。开发者可以将新的图像数据拷贝到已创建的纹理中，以实现动态更新纹理的效果。
+>   3. **SDL_RenderCopy()**: 用于将纹理的数据拷贝到渲染器中进行显示。开发者可以指定纹理的位置、大小等参数，将纹理渲染到屏幕上指定的位置。
+>   4. **SDL_DestroyTexture()**: 用于销毁一个已创建的纹理对象，释放相关的资源。
+>
+>   SDL中的纹理通常是与SDL_Renderer相关联的，即在创建纹理时需要指定一个SDL_Renderer对象。渲染器负责将纹理渲染到屏幕上，开发者通过渲染器来管理和操作纹理的显示。
+>
+>   SDL中的纹理是一种用于在屏幕上渲染图像的对象，通过SDL提供的函数，开发者可以方便地创建、加载、操作和渲染纹理，实现图像的显示和动画效果。
+>
+> - SDL_Rect
+>
+>   在SDL中，SDL_Rect是一个用于表示矩形区域的结构体，其定义如下：
+>
+>   ```c
+>   typedef struct {
+>       int x, y; // 矩形左上角的坐标
+>       int w, h; // 矩形的宽度和高度
+>   } SDL_Rect;
+>   ```
+>
+>   SDL_Rect结构体包含了矩形区域的左上角的坐标（x、y）以及矩形的宽度（w）和高度（h）。通过这些信息，可以准确地定义一个矩形的区域。
+>
+>   SDL_Rect结构体通常用于指定屏幕上的图像或纹理的位置和大小。例如，在渲染图像或纹理时，可以通过SDL_Rect来指定图像或纹理在屏幕上的位置和大小，以确定其在屏幕上的显示区域。
+>
+>   SDL_Rect结构体的成员变量及其含义如下：
+>
+>   - **x**: 表示矩形左上角的横坐标。
+>   - **y**: 表示矩形左上角的纵坐标。
+>   - **w**: 表示矩形的宽度。
+>   - **h**: 表示矩形的高度。
+>
+>   通过使用SDL_Rect结构体，开发者可以方便地对矩形区域进行描述和操作，从而实现图像或纹理在屏幕上的精确显示和布局。
+
+
+
+
+## FFmpeg开发用
+
+### 转码h264与yuv测试
+### 
+
+```cpp
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+
+// 引入FFmpeg库头文件
+extern "C"
+{
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libswscale/swscale.h"
+#include "libavdevice/avdevice.h"
+#include "libavutil/imgutils.h"
+}
+
+int main(int argc, char* argv[]) {
+	// 声明FFmpeg相关变量
+	AVFormatContext* pFormatCtx = NULL;
+	int i, videoindex;
+	AVCodecContext* pCodecCtx = NULL;
+	const AVCodec* pCodec = NULL;
+	AVFrame* pFrame = NULL, * pFrameYUV = NULL;
+	uint8_t* out_buffer = NULL;
+	AVPacket* packet = NULL;
+	int ret, got_picture;
+	struct SwsContext* img_convert_ctx = NULL;
+	// 视频文件路径
+	char filepath[] = "output.mp4";
+	int frame_cnt;
+
+	// 分配AVFormatContext结构
+	pFormatCtx = avformat_alloc_context();
+
+	// 打开输入文件
+	if (avformat_open_input(&pFormatCtx, filepath, NULL, NULL) != 0) {
+		printf("Couldn't open input stream.\n");
+		return -1;
+	}
+	// 查找流信息
+	if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
+		printf("Couldn't find stream information.\n");
+		return -1;
+	}
+
+	// 获取视频流的索引
+	videoindex = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
+	/*for (i = 0; i < pFormatCtx->nb_streams; i++)
+		if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+			videoindex = i;
+			break;
+		}*/
+	if (videoindex == -1) {
+		printf("Didn't find a video stream.\n");
+		return -1;
+	}
+
+	// 分配AVCodecContext结构并填充参数
+	pCodecCtx = avcodec_alloc_context3(NULL);
+	avcodec_parameters_to_context(pCodecCtx, pFormatCtx->streams[videoindex]->codecpar);
+	// 查找解码器
+	pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
+
+	if (pCodec == NULL) {
+		printf("Codec not found.\n");
+		return -1;
+	}
+	// 打开解码器
+	if (avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
+		printf("Could not open codec.\n");
+		return -1;
+	}
+    /*
+	// 打印编解码器信息
+	const AVCodecDescriptor* desc = avcodec_descriptor_get(pCodecCtx->codec_id);
+	if (desc) {
+		printf("编解码器名称: %s\n", desc->name);
+	}
+	else {
+		printf("未找到编解码器\n");
+	}
+	printf("时长：%lld\n", pFormatCtx->duration);
+	printf("封装格式：%s\n", pFormatCtx->iformat->name);
+	printf("封装格式：%s\n", pFormatCtx->iformat->long_name);
+	printf("视频编码器：%s\n", avcodec_get_name(pFormatCtx->streams[0]->codecpar->codec_id));
+	printf("音频编码器：%s\n", avcodec_get_name(pFormatCtx->streams[1]->codecpar->codec_id));
+	printf("视频编码器：%d\n", pFormatCtx->streams[0]->codecpar->codec_id);
+	printf("音频编码器：%d\n", pFormatCtx->streams[1]->codecpar->codec_id);
+
+	printf("宽：%d*%d\n", pFormatCtx->streams[0]->codecpar->width, pFormatCtx->streams[0]->codecpar->height);*/
+
+	// 分配AVFrame结构
+	pFrame = av_frame_alloc();
+	pFrameYUV = av_frame_alloc();
+/*
+av_malloc(size_t size) 函数：
+参数：
+size：要分配的内存大小，以字节为单位。
+
+作用：分配指定大小的内存块，并返回指向该内存块的指针。内存的内容是未初始化的。
+
+av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, int align) 函数：
+参数：
+pix_fmt：图像的像素格式，即采样格式，例如 AV_PIX_FMT_YUV420P。
+width：图像的宽度（以像素为单位）。
+height：图像的高度（以像素为单位）。
+align：内存对齐的要求，通常设置为 1。
+
+作用：根据给定的像素格式、宽度和高度，计算并返回存储图像数据所需的缓冲区大小，单位为字节。
+
+av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4], const uint8_t *src, enum AVPixelFormat pix_fmt, int width, int height, int align) 函数：
+参数：
+dst_data：指向包含图像数据的指针数组。通常情况下，这是一个 uint8_t* 类型的数组，有四个元素，用于存储 Y、U、V 平面的指针以及 alpha 通道（如果有）的指针。
+dst_linesize：指向包含图像每行数据大小的数组。通常情况下，这是一个 int 类型的数组，有四个元素，分别对应 Y、U、V 平面以及 alpha 通道（如果有）的每行数据大小。
+src：指向源图像数据的指针，通常是一块连续的内存区域。
+pix_fmt：源图像的像素格式。
+width：图像的宽度（以像素为单位）。
+height：图像的高度（以像素为单位）。
+align：内存对齐的要求，通常设置为 1。 注："align" 是用于内存对齐的参数。内存对齐是指将数据存储在内存中时，按照某种规则将数据的起始地址对齐到特定的边界。在这里，align 参数表示要求数据在内存中的对齐方式，通常设置为 1 表示不需要额外的对齐。如果设置为其他值，比如 16 或者 32，表示要求数据按照这个值的倍数对齐。
+
+作用：填充目标图像数据指针数组和行大小数组，以便将图像数据存储到指定的内存中。同时，该函数也会设置 AVFrame 结构体的相关属性，例如像素格式、宽度、高度等。
+*/
+	// 分配YUV输出缓冲区
+	out_buffer = (uint8_t*)av_malloc(av_image_get_buffer_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 1));
+	av_image_fill_arrays(pFrameYUV->data, pFrameYUV->linesize, out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 1);
+	// 分配AVPacket结构
+	packet = (AVPacket*)av_malloc(sizeof(AVPacket));
+	// 打印文件信息
+	printf("--------------- File Information ----------------\n");
+	av_dump_format(pFormatCtx, 0, filepath, 0);
+	printf("-------------------------------------------------\n");
+	// 初始化图像转换上下文
+	img_convert_ctx = sws_getContext(pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
+		pCodecCtx->width, pCodecCtx->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+
+	// 打开H264和YUV文件
+	FILE* fp_264 = fopen("test264.h264", "wb+");
+	FILE* fp_yuv = fopen("testyuv.yuv", "wb+");
+
+	// 初始化帧计数器
+	frame_cnt = 0;
+	// 循环读取每一帧数据
+	while (av_read_frame(pFormatCtx, packet) >= 0) {
+		// 检查当前数据包是否为视频流
+		if (packet->stream_index == videoindex) {
+			// 将数据包中的数据写入H264文件中
+			fwrite(packet->data, 1, packet->size, fp_264);
+			// 发送数据包进行解码
+			ret = avcodec_send_packet(pCodecCtx, packet);
+			if (ret < 0) {
+				printf("Decode Error.\n");
+				return -1;
+			}
+			// 循环接收解码后的视频帧
+			while (ret >= 0) {
+				ret = avcodec_receive_frame(pCodecCtx, pFrame);
+				if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+					break;
+				else if (ret < 0) {
+					printf("Error during decoding.\n");
+					return -1;
+				}
+				// 判断是否成功获取一帧图像
+				if (ret >= 0) {
+					// 将解码后的帧转换为YUV格式
+					sws_scale(img_convert_ctx, (const uint8_t* const*)pFrame->data, pFrame->linesize, 0, pCodecCtx->height,
+						pFrameYUV->data, pFrameYUV->linesize);
+/*
+int sws_scale(struct SwsContext *c, const uint8_t *const srcSlice[],
+              const int srcStride[], int srcSliceY, int srcSliceH,
+              uint8_t *const dst[], const int dstStride[]);
+参数说明如下：
+
+c：sws_getContext() 返回的 SwsContext 上下文。
+srcSlice：源图像数据的指针数组，每个元素指向源图像的一个图像平面。
+srcStride：源图像每个图像平面的行大小数组。
+srcSliceY：源图像的起始行。
+srcSliceH：源图像的高度。
+dst：目标图像数据的指针数组，每个元素指向目标图像的一个图像平面。
+dstStride：目标图像每个图像平面的行大小数组。
+该函数返回一个整型值，表示成功转换的行数，或者一个负值表示出错。
+
+sws_scale() 函数将源图像数据转换为目标图像数据，根据指定的 SwsContext 上下文和参数执行图像转换和缩放操作。它将源图像数据逐行地转换为目标图像数据，并根据需要进行缩放。输出的目标图像数据存储在 dst 参数指向的内存中。
+
+这个函数通常在进行视频编码、解码以及视频处理等场景中被广泛使用，用于将图像数据从一种格式或分辨率转换为另一种格式或分辨率。              
+*/       
+					// 输出解码的帧索引
+					printf("Decoded frame index: %d\n", frame_cnt);
+					// 将YUV数据写入YUV文件中
+					fwrite(pFrameYUV->data[0], 1, pCodecCtx->width* pCodecCtx->height, fp_yuv);
+					fwrite(pFrameYUV->data[1], 1, pCodecCtx->width* pCodecCtx->height / 4, fp_yuv);
+					fwrite(pFrameYUV->data[2], 1, pCodecCtx->width* pCodecCtx->height / 4, fp_yuv);
+					frame_cnt++;
+				}
+			}
+		}
+		// 释放数据包引用的资源，包括packet->data
+		av_packet_unref(packet);
+	}
+
+	// 关闭文件和释放内存
+	fclose(fp_264);
+	fclose(fp_yuv);
+	sws_freeContext(img_convert_ctx);
+	av_packet_free(&packet);
+	av_frame_free(&pFrameYUV);
+	av_frame_free(&pFrame);
+	avcodec_close(pCodecCtx);
+	avformat_close_input(&pFormatCtx);
+    return 0;
+}
+```
+
+
+
+### SDL播放YUV测试
+
+```cpp
+#include <stdio.h> // 包含标准输入输出头文件
+#include <SDL.h> // 包含SDL库头文件
+
+const int bpp=12; // 像素位深度，每个像素占用的位数
+
+int screen_w=960,screen_h=540; // 屏幕宽度和高度
+const int pixel_w=1920,pixel_h=1080; // 像素宽度和高度
+
+unsigned char buffer[pixel_w*pixel_h*bpp/8]; // 存储像素数据的缓冲区
+
+// 刷新事件
+#define REFRESH_EVENT  (SDL_USEREVENT + 1)
+// 中断事件
+#define BREAK_EVENT  (SDL_USEREVENT + 2)
+
+int thread_exit=0; // 线程退出时非0
+
+// 视频刷新函数
+int refresh_video(void *opaque){
+    thread_exit=0; // 初始化线程退出标志
+    while (thread_exit==0) { // 当线程未退出时循环执行
+        SDL_Event event; // 创建SDL事件
+        event.type = REFRESH_EVENT; // 设置事件类型为刷新事件
+        SDL_PushEvent(&event); // 将事件压入事件队列
+        SDL_Delay(40); // 延迟40毫秒
+    }
+    thread_exit=0; // 重置线程退出标志
+    // 发送中断事件
+    SDL_Event event;
+    event.type = BREAK_EVENT;
+    SDL_PushEvent(&event);
+    return 0;
+}
+
+int main(int argc, char* argv[])
+{
+    if(SDL_Init(SDL_INIT_VIDEO)) { // 初始化SDL视频模块，如果失败则输出错误信息
+        printf( "Could not initialize SDL - %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Window *screen; // 创建SDL窗口指针
+    // SDL 2.0支持多窗口，创建窗口并指定窗口标题、位置、大小、可选参数
+    screen = SDL_CreateWindow("Simplest Video Play SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        screen_w, screen_h,SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+    if(!screen) { // 如果创建窗口失败则输出错误信息
+        printf("SDL: could not create window - exiting:%s\n",SDL_GetError());
+        return -1;
+    }
+    // 创建SDL渲染器
+    SDL_Renderer* sdlRenderer = SDL_CreateRenderer(screen, -1, 0);
+
+    Uint32 pixformat=0; // 像素格式
+    // YUV像素格式，IYUV: Y + U + V  (3个平面)
+    pixformat= SDL_PIXELFORMAT_IYUV;
+
+    // 创建SDL纹理
+    SDL_Texture* sdlTexture = SDL_CreateTexture(sdlRenderer,pixformat, SDL_TEXTUREACCESS_STREAMING,pixel_w,pixel_h);
+
+    FILE *fp=NULL; // 文件指针初始化
+    // 以二进制读写方式打开文件
+    fp=fopen("testyuv.yuv","rb+");
+
+    if(fp==NULL){ // 如果文件打开失败则输出错误信息
+        printf("cannot open this file\n");
+        return -1;
+    }
+
+    SDL_Rect sdlRect; // SDL矩形
+
+    // 创建刷新线程
+    SDL_Thread *refresh_thread = SDL_CreateThread(refresh_video,NULL,NULL);
+    SDL_Event event; // SDL事件
+    while(1){
+        // 等待事件
+        SDL_WaitEvent(&event);
+        if(event.type==REFRESH_EVENT){ // 如果事件类型为刷新事件
+            if (fread(buffer, 1, pixel_w*pixel_h*bpp/8, fp) != pixel_w*pixel_h*bpp/8){ // 读取文件数据到缓冲区
+                // 循环读取文件数据
+                fseek(fp, 0, SEEK_SET);
+                fread(buffer, 1, pixel_w*pixel_h*bpp/8, fp);
+            }
+
+            // 更新纹理
+            SDL_UpdateTexture( sdlTexture, NULL, buffer, pixel_w);
+
+            /*黑边效果*/
+            /*
+            sdlRect.x = 10;
+        	sdlRect.y = 10;
+	        sdlRect.w = screen_w - 20;
+	        sdlRect.h = screen_h - 20;
+            */
+            // 修正窗口大小变化
+            sdlRect.x = 0;
+            sdlRect.y = 0;
+            sdlRect.w = screen_w;
+            sdlRect.h = screen_h;
+
+            // 渲染并显示
+            SDL_RenderClear( sdlRenderer );
+            SDL_RenderCopy( sdlRenderer, sdlTexture, NULL, &sdlRect);
+            SDL_RenderPresent( sdlRenderer );
+
+        }else if(event.type==SDL_WINDOWEVENT){ // 如果事件类型为窗口事件
+            // 处理窗口大小变化
+            SDL_GetWindowSize(screen,&screen_w,&screen_h);
+        }else if(event.type==SDL_QUIT){ // 如果事件类型为退出事件
+            thread_exit=1; // 设置线程退出标志
+        }else if(event.type==BREAK_EVENT){ // 如果事件类型为中断事件
+            break; // 退出循环
+        }
+    }
+    SDL_Quit(); // 退出SDL
+    return 0; // 返回0表示成功执行
+}
+```
+
+
+
+### 简易视频播放器
+
+```cpp
+// FFSDLScreen.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+//
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h> // 包含标准输入输出头文件
+
+extern "C"
+{
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libswscale/swscale.h"
+#include "libavdevice/avdevice.h"
+#include "libavutil/imgutils.h"
+#include "sdl/SDL.h"
+}
+
+
+const int bpp = 12; // 像素位深度，每个像素占用的位数
+
+
+// 刷新事件
+#define REFRESH_EVENT  (SDL_USEREVENT + 1)
+// 中断事件
+#define BREAK_EVENT  (SDL_USEREVENT + 2)
+
+int paused = 0; // 非0是视频暂停
+int thread_exit = 0; // 非0时线程退出
+int video_exit = 0; // 非0时视频退出
+
+// 视频刷新函数
+int refresh_video(void* opaque) {
+	thread_exit = 0; // 初始化线程退出标志
+	while (thread_exit == 0) { // 当线程未退出时循环执行
+		SDL_Event event; // 创建SDL事件
+		event.type = REFRESH_EVENT; // 设置事件类型为刷新事件
+		SDL_PushEvent(&event); // 将事件压入事件队列
+		SDL_Delay(40); // 延迟40毫秒
+		while (paused && thread_exit == 0) SDL_Delay(100);
+	}
+	thread_exit = 0; // 重置线程退出标志
+	// 发送中断事件
+	SDL_Event event;
+	event.type = BREAK_EVENT;
+	SDL_PushEvent(&event);
+	return 0;
+}
+
+
+int main(int argc, char* argv[])
+{
+	if (argc != 2) {
+		printf("error parameters!\n");
+		return 0;
+	}
+
+	AVFormatContext* pFormatCtx = NULL;
+	int				i, videoindex;
+	AVCodecContext* pCodecCtx = NULL;
+	const AVCodec* pCodec = NULL;
+	AVFrame* pFrame = NULL, * pFrameYUV = NULL;
+	uint8_t* out_buffer = NULL;
+	AVPacket* packet = NULL;
+	int y_size;
+	int ret, got_picture;
+	struct SwsContext* img_convert_ctx = NULL;
+	SDL_Rect sdlRect; // SDL矩形
+	char* filepath = (char*)malloc(strlen(argv[1]) + 1);
+	if (filepath == NULL) {
+		printf("Memory allocation failed!\n");
+		return 0;
+	}
+	strcpy(filepath, argv[1]);//输入文件路径
+	int frame_cnt; // 帧数据
+
+
+	pFormatCtx = avformat_alloc_context();
+
+	if (avformat_open_input(&pFormatCtx, filepath, NULL, NULL) != 0) {
+		printf("Couldn't open input stream.\n");
+		return -1;
+	}
+	if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
+		printf("Couldn't find stream information.\n");
+		return -1;
+	}
+	videoindex = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
+	if (videoindex == -1) {
+		printf("Didn't find a video stream.\n");
+		return -1;
+	}
+
+	pCodecCtx = avcodec_alloc_context3(NULL);
+	avcodec_parameters_to_context(pCodecCtx, pFormatCtx->streams[videoindex]->codecpar);
+	pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
+
+	if (pCodec == NULL) {
+		printf("Codec not found.\n");
+		return -1;
+	}
+	if (avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
+		printf("Could not open codec.\n");
+		return -1;
+	}
+
+
+	pFrame = av_frame_alloc();
+	pFrameYUV = av_frame_alloc();
+	out_buffer = (uint8_t*)av_malloc(av_image_get_buffer_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 1));
+	av_image_fill_arrays(pFrameYUV->data, pFrameYUV->linesize, out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 1);
+	packet = (AVPacket*)av_malloc(sizeof(AVPacket));
+	//Output Info-----------------------------
+	printf("--------------- File Information ----------------\n");
+	av_dump_format(pFormatCtx, 0, filepath, 0);
+	printf("-------------------------------------------------\n");
+	img_convert_ctx = sws_getContext(pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
+		pCodecCtx->width, pCodecCtx->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+
+
+	// 创建刷新线程
+	SDL_Thread* refresh_thread = SDL_CreateThread(refresh_video, NULL, NULL);
+	SDL_Event event; // SDL事件
+	const int pixel_w = pCodecCtx->width, pixel_h = pCodecCtx->height; // 像素宽度和高度
+	int screen_w = pixel_w / 2, screen_h = pixel_h / 2; // 屏幕宽度和高度
+
+	if (SDL_Init(SDL_INIT_VIDEO)) { // 初始化SDL视频模块，如果失败则输出错误信息
+		printf("Could not initialize SDL - %s\n", SDL_GetError());
+		return -1;
+	}
+
+	SDL_Window* screen; // 创建SDL窗口指针
+	// SDL 2.0支持多窗口，创建窗口并指定窗口标题、位置、大小、可选参数
+	screen = SDL_CreateWindow("Simplest Video Play SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		screen_w, screen_h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	if (!screen) { // 如果创建窗口失败则输出错误信息
+		printf("SDL: could not create window - exiting:%s\n", SDL_GetError());
+		return -1;
+	}
+	// 创建SDL渲染器
+	SDL_Renderer* sdlRenderer = SDL_CreateRenderer(screen, -1, 0);
+
+	Uint32 pixformat = 0; // 像素格式
+	// YUV像素格式，IYUV: Y + U + V  (3个平面)
+	pixformat = SDL_PIXELFORMAT_IYUV;
+
+	// 创建SDL纹理
+	SDL_Texture* sdlTexture = SDL_CreateTexture(sdlRenderer, pixformat, SDL_TEXTUREACCESS_STREAMING, pixel_w, pixel_h);
+
+	frame_cnt = 0;
+	while (av_read_frame(pFormatCtx, packet) >= 0 && !video_exit) {
+		if (packet->stream_index == videoindex) {
+			ret = avcodec_send_packet(pCodecCtx, packet);
+			if (ret < 0) {
+				printf("Decode Error.\n");
+				return -1;
+			}
+			while (ret >= 0) {
+				ret = avcodec_receive_frame(pCodecCtx, pFrame);
+				if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+					break;
+				else if (ret < 0) {
+					printf("Error during decoding.\n");
+					return -1;
+				}
+				SDL_WaitEvent(&event);
+				if (event.type == REFRESH_EVENT) { // 如果事件类型为刷新事件
+
+					sws_scale(img_convert_ctx, (const uint8_t* const*)pFrame->data, pFrame->linesize, 0, pCodecCtx->height,
+						pFrameYUV->data, pFrameYUV->linesize);
+					printf("Decoded frame index: %d\n", frame_cnt);
+					// 更新纹理
+					SDL_UpdateTexture(sdlTexture, NULL, pFrameYUV->data[0], pFrameYUV->linesize[0]);
+
+					// 修正窗口大小变化
+					sdlRect.x = 0;
+					sdlRect.y = 0;
+					sdlRect.w = screen_w;
+					sdlRect.h = screen_h;
+
+					// 渲染并显示
+					SDL_RenderClear(sdlRenderer);
+					SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &sdlRect);
+					SDL_RenderPresent(sdlRenderer);
+					frame_cnt++;
+				}
+				else if (event.type == SDL_WINDOWEVENT) { // 如果事件类型为窗口事件
+					// 处理窗口大小变化
+					SDL_GetWindowSize(screen, &screen_w, &screen_h);
+				}
+				else if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+					paused = ~paused;
+				}
+				else if (event.type == SDL_QUIT) { // 如果事件类型为退出事件
+					thread_exit = 1; // 设置线程退出标志
+				}
+				else if (event.type == BREAK_EVENT) { // 如果事件类型为中断事件
+					video_exit = 1;
+					break; // 退出循环
+				}
+			}
+		}
+		av_packet_unref(packet);
+	}
+	SDL_Quit();
+	sws_freeContext(img_convert_ctx);
+	av_packet_free(&packet);
+	av_frame_free(&pFrameYUV);
+	av_frame_free(&pFrame);
+	avcodec_close(pCodecCtx);
+	avformat_close_input(&pFormatCtx);
+
+
+	return 0;
+}
+
+```
+
+
+
+
+
+### 简易音视频播放器
+
+```cpp
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <thread>
+
+extern "C"
+{
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libswscale/swscale.h"
+#include "libswresample/swresample.h"
+#include "libavdevice/avdevice.h"
+#include "libavutil/imgutils.h"
+#include "libavutil/audio_fifo.h"
+#include "sdl/SDL.h"
+}
+
+#undef main
+AVAudioFifo* fifo = NULL;
+SDL_AudioSpec wanted_spec, spec;
+SDL_mutex* mtx = NULL;
+// 刷新事件
+#define REFRESH_EVENT  (SDL_USEREVENT + 1)
+// 中断事件
+#define BREAK_EVENT  (SDL_USEREVENT + 2)
+
+
+
+const int bpp = 12; // 像素位深度，每个像素占用的位数
+
+
+int paused = 0; // 非0是视频暂停
+int thread_exit = 0; // 非0时线程退出
+int video_exit = 0; // 非0时视频退出
+
+AVFormatContext* pFormatCtx = NULL;
+int				videoIndex, audioIndex;
+AVCodecContext* pVideoCodecCtx = NULL, * pAudioCodecCtx = NULL;
+const AVCodec* pVideoCodec = NULL;
+const AVCodec* pAudioCodec = NULL;
+AVFrame* pVideoFrame = NULL, * pYUVFrame = NULL, * pAudioFrame = NULL;
+enum AVSampleFormat forceFormat;
+uint8_t* outBuffer = NULL;
+AVPacket* packet = NULL;
+AVDictionary* opts = NULL;
+int ret, audioId;
+struct SwsContext* imgConvertCtx = NULL;
+struct SwrContext* swr_ctx = NULL;
+SDL_Rect sdlRect; // SDL矩形
+SDL_Thread* refresh_thread = NULL;
+SDL_Renderer* sdlRenderer = NULL;
+SDL_Texture* sdlTexture = NULL;
+Uint32 pixformat;
+int pixel_w, pixel_h; // 像素宽度和高度
+int screen_w, screen_h; // 屏幕宽度和高度
+int videoFrameCnt, audioFrameCnt; // 帧数据
+
+// 视频刷新函数
+int refresh_video(void* opaque) {
+	thread_exit = 0; // 初始化线程退出标志
+	while (thread_exit == 0) { // 当线程未退出时循环执行
+		SDL_Event event; // 创建SDL事件
+		event.type = REFRESH_EVENT; // 设置事件类型为刷新事件
+		SDL_PushEvent(&event); // 将事件压入事件队列
+		SDL_Delay(40); // 延迟40毫秒
+		while (paused && thread_exit == 0) SDL_Delay(100);
+	}
+	thread_exit = 0; // 重置线程退出标志
+	// 发送中断事件
+	SDL_Event event;
+	event.type = BREAK_EVENT;
+	SDL_PushEvent(&event);
+	return 0;
+}
+
+//音频回调函数
+void audioCallBack(void* userdata, Uint8* stream, int len) {
+	//由于AVAudioFifo非线程安全，且是子线程触发此回调，所以需要加锁
+	SDL_LockMutex(mtx);
+	//读取队列中的音频数据
+	av_audio_fifo_read(fifo, (void**)&stream, spec.samples);
+	SDL_UnlockMutex(mtx);
+}
+
+
+
+int main(int argc, char* argv[])
+{
+	if (argc != 2) {
+		printf("error parameters!\n");
+		return 0;
+	}
+
+	char* filepath = (char*)malloc(strlen(argv[1]) + 1);
+	if (filepath == NULL) {
+		printf("Memory allocation failed!\n");
+		return 0;
+	}
+	strcpy(filepath, argv[1]);//输入文件路径
+
+	//使用多线程解码
+	if (!av_dict_get(opts, "threads", NULL, 0))
+		av_dict_set(&opts, "threads", "auto", 0);
+
+	// 获取封装格式信息
+	pFormatCtx = avformat_alloc_context();
+
+	if (avformat_open_input(&pFormatCtx, filepath, NULL, NULL) != 0) {
+		printf("Couldn't open input stream.\n");
+		goto end;
+	}
+	if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
+		printf("Couldn't find stream information.\n");
+		goto end;
+	}
+
+	// 获取视频解码器及解码数据
+	videoIndex = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
+	if (videoIndex == -1) {
+		printf("Didn't find a video stream.\n");
+		goto end;
+	}
+
+	pVideoCodecCtx = avcodec_alloc_context3(NULL);
+	avcodec_parameters_to_context(pVideoCodecCtx, pFormatCtx->streams[videoIndex]->codecpar);
+	pVideoCodec = avcodec_find_decoder(pVideoCodecCtx->codec_id);
+	if (pVideoCodec == NULL) {
+		printf("Video codec not found.\n");
+		goto end;
+	}
+	if (avcodec_open2(pVideoCodecCtx, pVideoCodec, &opts) < 0) {
+		printf("Could not open video codec.\n");
+		goto end;
+	}
+
+
+	// 获取音频解码器及解码数据
+	audioIndex = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+	if (audioIndex == -1) {
+		printf("Didn't find a audio stream.\n");
+		goto end;
+	}
+
+	pAudioCodecCtx = avcodec_alloc_context3(NULL);
+	avcodec_parameters_to_context(pAudioCodecCtx, pFormatCtx->streams[audioIndex]->codecpar);
+	pAudioCodec = avcodec_find_decoder(pAudioCodecCtx->codec_id);
+	if (pAudioCodec == NULL) {
+		printf("Audio codec not found.\n");
+		goto end;
+	}
+	if (avcodec_open2(pAudioCodecCtx, pAudioCodec, &opts) < 0) {
+		printf("Could not open audio codec.\n");
+		goto end;
+	}
+
+	
+	// 视频帧初始化
+	pVideoFrame = av_frame_alloc();
+	pYUVFrame = av_frame_alloc();
+	pAudioFrame = av_frame_alloc();
+	outBuffer = (uint8_t*)av_malloc(av_image_get_buffer_size(AV_PIX_FMT_YUV420P, pVideoCodecCtx->width, pVideoCodecCtx->height, 1));
+	av_image_fill_arrays(pYUVFrame->data, pYUVFrame->linesize, outBuffer, AV_PIX_FMT_YUV420P, pVideoCodecCtx->width, pVideoCodecCtx->height, 1);
+	packet = (AVPacket*)av_malloc(sizeof(AVPacket));
+	//打印信息-----------------------------
+	printf("--------------- File Information ----------------\n");
+	av_dump_format(pFormatCtx, 0, filepath, 0);
+	printf("-------------------------------------------------\n");
+	imgConvertCtx = sws_getContext(pVideoCodecCtx->width, pVideoCodecCtx->height, pVideoCodecCtx->pix_fmt,
+		pVideoCodecCtx->width, pVideoCodecCtx->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+
+
+	// 创建视频刷新线程
+	refresh_thread = SDL_CreateThread(refresh_video, NULL, NULL);
+	SDL_Event event; // SDL事件
+	pixel_w = pVideoCodecCtx->width, pixel_h = pVideoCodecCtx->height; // 像素宽度和高度
+	screen_w = pixel_w / 2, screen_h = pixel_h / 2; // 屏幕宽度和高度
+
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) { // 初始化SDL视频模块，如果失败则输出错误信息
+		printf("Could not initialize SDL - %s\n", SDL_GetError());
+		goto end;
+	}
+
+	SDL_Window* screen; // 创建SDL窗口指针
+	// SDL 2.0支持多窗口，创建窗口并指定窗口标题、位置、大小、可选参数
+	screen = SDL_CreateWindow(filepath, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		screen_w, screen_h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	if (!screen) { // 如果创建窗口失败则输出错误信息
+		printf("SDL: could not create window - exiting:%s\n", SDL_GetError());
+		goto end;
+	}
+	// 创建SDL渲染器
+	sdlRenderer = SDL_CreateRenderer(screen, -1, 0);
+
+	pixformat = 0; // 像素格式
+	// YUV像素格式，IYUV: Y + U + V  (3个平面)
+	pixformat = SDL_PIXELFORMAT_IYUV;
+
+	// 创建SDL纹理
+	sdlTexture = SDL_CreateTexture(sdlRenderer, pixformat, SDL_TEXTUREACCESS_STREAMING, pixel_w, pixel_h);
+
+
+	// 设置SDL音频参数
+	wanted_spec.freq = pAudioCodecCtx->sample_rate;
+	wanted_spec.format = AUDIO_F32SYS;
+	wanted_spec.channels = pAudioCodecCtx->ch_layout.nb_channels;
+	wanted_spec.silence = 0;
+	wanted_spec.samples = FFMAX(512, 2 << av_log2(wanted_spec.freq / 30));;
+	wanted_spec.callback = audioCallBack;
+	wanted_spec.userdata = NULL;
+	audioId = SDL_OpenAudioDevice(NULL, 0, &wanted_spec, &spec, 1);
+	if (audioId < 2) {
+		printf("SDL_OpenAudioDeviceError:%s\n.", SDL_GetError());
+		goto end;
+	}
+
+	switch (spec.format)
+	{
+	case	AUDIO_S16SYS:
+		forceFormat = AV_SAMPLE_FMT_S16;
+		break;
+	case	AUDIO_S32SYS:
+		forceFormat = AV_SAMPLE_FMT_S32;
+		break;
+	case	AUDIO_F32SYS:
+		forceFormat = AV_SAMPLE_FMT_FLT;
+		break;
+	default:
+		printf("audio device format was not surported!\n");
+		goto end;
+		break;
+	}
+
+
+	//使用音频队列
+	fifo = av_audio_fifo_alloc(forceFormat, spec.channels, spec.samples * 10);
+	if (!fifo)
+	{
+		printf("alloc fifo failed!\n");
+		goto end;
+	}
+	mtx = SDL_CreateMutex();
+	if (!mtx)
+	{
+		printf("alloc mutex failed!\n");
+		goto end;
+	}
+	SDL_PauseAudioDevice(audioId, 0);
+
+
+	videoFrameCnt = 0;
+	audioFrameCnt = 0;
+	while (av_read_frame(pFormatCtx, packet) >= 0 && !video_exit) {
+		if (packet->stream_index == videoIndex) {
+			ret = avcodec_send_packet(pVideoCodecCtx, packet);
+			if (ret < 0) {
+				printf("Video decode error.\n");
+				goto end;
+			}
+			while (ret >= 0) {
+				ret = avcodec_receive_frame(pVideoCodecCtx, pVideoFrame);
+				if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+					break;
+				else if (ret < 0) {
+					printf("Error during video decoding.\n");
+					goto end;
+				}
+				SDL_WaitEvent(&event);
+				if (event.type == REFRESH_EVENT) { // 如果事件类型为刷新事件
+
+					sws_scale(imgConvertCtx, (const uint8_t* const*)pVideoFrame->data, pVideoFrame->linesize, 0, pVideoCodecCtx->height,
+						pYUVFrame->data, pYUVFrame->linesize);
+					printf("Decoded video frame index: %d\n", videoFrameCnt);
+					// 更新纹理
+					SDL_UpdateTexture(sdlTexture, NULL, pYUVFrame->data[0], pYUVFrame->linesize[0]);
+
+					// 修正窗口大小变化
+					sdlRect.x = 0;
+					sdlRect.y = 0;
+					sdlRect.w = screen_w;
+					sdlRect.h = screen_h;
+
+					// 渲染并显示
+					SDL_RenderClear(sdlRenderer);
+					SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &sdlRect);
+					SDL_RenderPresent(sdlRenderer);
+					videoFrameCnt++;
+				}
+				else if (event.type == SDL_WINDOWEVENT) { // 如果事件类型为窗口事件
+					// 处理窗口大小变化
+					SDL_GetWindowSize(screen, &screen_w, &screen_h);
+				}
+				else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+					paused = ~paused;
+				}
+				else if (event.type == SDL_QUIT) { // 如果事件类型为退出事件
+					thread_exit = 1; // 设置线程退出标志
+				}
+				else if (event.type == BREAK_EVENT) { // 如果事件类型为中断事件
+					video_exit = 1;
+					break; // 退出循环
+				}
+			}
+		}
+		if (packet->stream_index == audioIndex) {
+			ret = avcodec_send_packet(pAudioCodecCtx, packet);
+			if (ret < 0) {
+				printf("Audio decode error.\n");
+				return -1;
+			}
+			while (avcodec_receive_frame(pAudioCodecCtx, pAudioFrame) == 0) {
+				printf("Decoded audio frame index: %d\n", audioFrameCnt);
+				audioFrameCnt++;
+				uint8_t* data;
+				size_t dataSize;
+				size_t samples;
+				if (forceFormat != pAudioCodecCtx->sample_fmt || spec.freq != pAudioFrame->sample_rate || spec.channels != pAudioFrame->ch_layout.nb_channels)
+					//重采样
+				{
+					//计算输入采样数
+					int out_count = (int64_t)pAudioFrame->nb_samples * spec.freq / pAudioFrame->sample_rate + 256;
+					//计算输出数据大小
+					int out_size = av_samples_get_buffer_size(NULL, spec.channels, out_count, forceFormat, 0);
+					//输入数据指针
+					const uint8_t** in = (const uint8_t**)pAudioFrame->extended_data;
+					//输出缓冲区指针
+					uint8_t** out = &outBuffer;
+					int len2 = 0;
+					if (out_size < 0) {
+						av_log(NULL, AV_LOG_ERROR, "av_samples_get_buffer_size() failed\n");
+						return -1;
+					}
+					if (!swr_ctx)
+						//初始化重采样对象
+					{
+						AVChannelLayout out_ch_layout, in_ch_layout = pAudioCodecCtx->ch_layout;
+						av_channel_layout_default(&out_ch_layout, spec.channels);
+						swr_alloc_set_opts2(&swr_ctx, &out_ch_layout, forceFormat, spec.freq, &in_ch_layout, pAudioCodecCtx->sample_fmt, pAudioCodecCtx->sample_rate, 0, NULL);
+						if (!swr_ctx || swr_init(swr_ctx) < 0) {
+							av_log(NULL, AV_LOG_ERROR, "swr_alloc_set_opts() failed\n");
+							return -1;
+						}
+					}
+					if (!outBuffer)
+						//申请输出缓冲区
+					{
+						outBuffer = (uint8_t*)av_mallocz(out_size);
+					}
+					//执行重采样
+					len2 = swr_convert(swr_ctx, out, out_count, in, pAudioFrame->nb_samples);
+					if (len2 < 0) {
+						av_log(NULL, AV_LOG_ERROR, "swr_convert() failed\n");
+						return -1;
+					}
+					//取得输出数据
+					data = outBuffer;
+					//输出数据长度
+					dataSize = av_samples_get_buffer_size(0, spec.channels, len2, forceFormat, 1);
+					samples = len2;
+				}
+				else
+				{
+					data = pAudioFrame->data[0];
+					dataSize = av_samples_get_buffer_size(pAudioFrame->linesize, pAudioFrame->ch_layout.nb_channels, pAudioFrame->nb_samples, forceFormat, 0);
+					samples = pAudioFrame->nb_samples;
+				}
+				//写入队列
+				while (1) {
+					SDL_LockMutex(mtx);
+					if (av_audio_fifo_space(fifo) >= samples)
+					{
+						av_audio_fifo_write(fifo, (void**)&data, samples);
+						SDL_UnlockMutex(mtx);
+						break;
+					}
+					SDL_UnlockMutex(mtx);
+					//队列可用空间不足则延时等待
+					//SDL_Delay((dataSize) * 1000.0 / (spec.freq * av_get_bytes_per_sample(forceFormat) * spec.channels) - 1);
+				}
+			}
+		}
+		av_packet_unref(packet);
+	}
+end:
+	//销毁资源
+	if (fifo)
+		av_audio_fifo_free(fifo);
+	if (audioId >= 2)
+	{
+		SDL_PauseAudioDevice(audioId, 1);
+		SDL_CloseAudioDevice(audioId);
+	}
+	if (mtx)
+		SDL_DestroyMutex(mtx);
+	if (imgConvertCtx)
+		sws_freeContext(imgConvertCtx);
+	if (packet)
+		av_packet_free(&packet);
+	if (pYUVFrame)
+		av_frame_free(&pYUVFrame);
+	if (pVideoFrame)
+		av_frame_free(&pVideoFrame);
+	if (pAudioFrame)
+		av_frame_free(&pAudioFrame);
+	if (pVideoCodecCtx)
+		avcodec_close(pVideoCodecCtx);
+	if (pAudioCodecCtx)
+		avcodec_close(pAudioCodecCtx);
+	if (pFormatCtx)
+		avformat_close_input(&pFormatCtx);
+	av_dict_free(&opts);
+	SDL_Quit();
+
+	return 0;
+}
+```
+
